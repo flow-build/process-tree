@@ -1,6 +1,6 @@
 {
   "name": "@flowbuild/process-tree",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "solution to store process hierarchies",
   "main": "dist/index.js",
   "scripts": {
@@ -8,10 +8,10 @@
     "lint": "eslint ./src --ext .js --max-warnings=0",
     "lint:fix": "eslint ./src --ext .js --max-warnings=0 --fix",
     "build": "tsc",
-    "migrations": "knex --env ${KNEX_ENV} --knexfile knexfile.js migrate:latest",
-    "seeds": "knex --env ${KNEX_ENV} --knexfile knexfile.js seed:run",
-    "migrations:local": "knex --env test --knexfile knexfile.js migrate:latest",
-    "seeds:local": "knex --env test --knexfile knexfile.js seed:run",
+    "migrations": "knex --env ${KNEX_ENV} --knexfile ./dist/knexfile.js migrate:latest",
+    "seeds": "knex --env ${KNEX_ENV} --knexfile ./dist/knexfile.js seed:run",
+    "migrations:local": "knex --cwd ./src migrate:latest",
+    "seeds:local": "knex --env test --knexfile ./src/knexfile.ts seed:run",
     "get-version": "echo $npm_package_version",
     "release": "semantic-release"
   },

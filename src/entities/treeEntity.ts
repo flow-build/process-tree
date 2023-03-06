@@ -2,6 +2,7 @@ import { TreeKnexPersist, treePersist } from "../persist/treePersist";
 import { logger } from "../utils/logger";
 import { db } from "../db";
 import _ from "lodash";
+import { Knex } from "knex";
 
 export type treeEntity = {
   processId?: string;
@@ -14,8 +15,8 @@ export type treeEntity = {
 export class TreeEntity {
   persist: any;
 
-  constructor() {
-    this.persist = new TreeKnexPersist(db);
+  constructor(_db: Knex) {
+    this.persist = new TreeKnexPersist(_db);
   }
 
   _deserialize(data: treePersist): treeEntity {

@@ -1,6 +1,7 @@
 import type { Knex } from "knex";
 import * as path from 'path'
 const BASE_PATH = path.join(__dirname, "db");
+if(!process.env.NODE_ENV) { process.env.NODE_ENV = 'test' }
 
 export const config: { [key: string]: Knex.Config } = {
   test: {
@@ -42,3 +43,5 @@ export const config: { [key: string]: Knex.Config } = {
     },
   },
 };
+
+module.exports = config

@@ -1,8 +1,34 @@
 import { v1 } from "uuid";
 import { Tree } from "../index";
-import { db } from "./utils/db";
+import { db, cleanDb, insertRecord } from "./utils/db";
 
 const tree = new Tree(db);
+
+beforeAll(async () => {
+  await cleanDb();
+  await insertRecord("process_tree", {
+    process_id: "d19c8b6c-521f-4693-99ab-9e28ff766d2f",
+    root_id: "d19c8b6c-521f-4693-99ab-9e28ff766d2f",
+    depth: 0,
+  });
+  await insertRecord("process_tree", {
+    process_id: "bbbdaaac-8529-41c7-8686-1e8e720b018d",
+    root_id: "d19c8b6c-521f-4693-99ab-9e28ff766d2f",
+    parent_id: "d19c8b6c-521f-4693-99ab-9e28ff766d2f",
+    depth: 1,
+  });
+  await insertRecord("process_tree", {
+    process_id: "af763523-dbfa-4558-a9db-8ed8042cdf7e",
+    root_id: "d19c8b6c-521f-4693-99ab-9e28ff766d2f",
+    parent_id: "bbbdaaac-8529-41c7-8686-1e8e720b018d",
+    depth: 2,
+  })
+})
+
+afterAll(async () => {
+  await cleanDb();
+})
+
 
 describe("## get root ###", () => {
   test("should return the root id", async () => {
@@ -46,15 +72,24 @@ describe("## create new tree ###", () => {
 });
 
 describe("## append process to existing tree ###", () => {
+
+beforeAll(async () => {
+  await tree.createTree("c4e5db5d-56c6-4c46-9354-66b9faa75bad");
+})
+
+afterAll(async () => {
+  await db("process_tree").del();
+})
+
   test("should work", async () => {
     const processId = v1()
     const child = {
-      parentId: '7668ab10-b9df-11ed-93d4-7bcefd8902d1',
+      parentId: "c4e5db5d-56c6-4c46-9354-66b9faa75bad",
       processId
     }
     const response = await tree.appendChild(child);
     expect(response.processId).toEqual(processId);
-    expect(response.rootId).toEqual('7668ab10-b9df-11ed-93d4-7bcefd8902d1');
+    expect(response.rootId).toEqual("c4e5db5d-56c6-4c46-9354-66b9faa75bad");
   });
 
   test("should return error for an existing process id", async () => {
